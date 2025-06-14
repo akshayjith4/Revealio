@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload - Revealio</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Upload or Capture Image</h1>
+
+        <form method="post" enctype="multipart/form-data" id="upload-form">
+            <!-- ✅ Browse (File Picker) -->
+            <button type="button" class="btn" onclick="document.getElementById('file-upload').click()">Browse</button>
+            <input id="file-upload" type="file" name="image" accept="image/*" style="display: none;" onchange="previewImage(this)">
+
+            <!-- ✅ Capture from Camera -->
+            <button type="button" class="btn" onclick="openCamera()">Capture</button>
+
+            <!-- ✅ Hidden Camera Video Feed -->
+            <div id="camera-container" style="display: none;">
+                <video id="camera-feed" autoplay></video>
+                <canvas id="camera-canvas" style="display: none;"></canvas>
+                <p>Press <b>Space</b> to capture</p>
+            </div>
+
+            <!-- ✅ Image Preview -->
+            <div id="preview-container" style="display: none;">
+                <h2>Preview:</h2>
+                <img id="preview-image" src="" alt="Captured Image" width="300" style="border-radius: 8px;">
+            </div>
+
+            <!-- ✅ Hidden Input for Captured Image -->
+            <input type="hidden" name="captured-image" id="captured-image">
+
+            <!-- ✅ Final Upload Button -->
+            <button id="uploadButton" class="btn upload-btn" type="submit">Upload</button>
+        </form>
+
+        <!-- ✅ Display Uploaded Image -->
+        {% if uploaded_image %}
+            <h2>Uploaded Image:</h2>
+            <img src="{{ uploaded_image }}" alt="Uploaded Image" width="300" style="border-radius: 8px;">
+        {% endif %}
+
+        <!-- ✅ Display Extracted Text -->
+        {% if extracted_text %}
+            <h2>Extracted Text:</h2>
+            <p>{{ extracted_text }}</p>
+            <a href="{{ url_for('results') }}" class="btn">View Results</a>
+        {% endif %}
+    </div>
+
+    <script>
+        function previewImage(input) {
+            const preview = document.getElementById("preview-image");
+            const previewContainer = document.getElementById("preview-container");
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                    previewContainer.style.display = "block";
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function openCamera() {
+            const cameraContainer = document.getElementById("camera-container");
+            const video = document.getElementById("camera-feed");
+
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function (stream) {
+                    video.srcObject = stream;
+                    cameraContainer.style.display = "block";
+                    document.addEventListener("keydown", captureImage);
+                })
+                .catch(function (error) {
+                    alert("Camera access denied: " + error);
+                });
+        }
+
+        function captureImage(event) {
+            if (event.code === "Space") {
+                event.preventDefault(); 
+
+                const video = document.getElementById("camera-feed");
+                const canvas = document.getElementById("camera-canvas");
+                const preview = document.getElementById("preview-image");
+                const previewContainer = document.getElementById("preview-container");
+                const capturedInput = document.getElementById("captured-image");
+                const form = document.getElementById("upload-form");
+
+                const context = canvas.getContext("2d");
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                const imageDataURL = canvas.toDataURL("image/png");
+                preview.src = imageDataURL;
+                previewContainer.style.display = "block";
+
+                capturedInput.value = imageDataURL;
+
+                const tracks = video.srcObject.getTracks();
+                tracks.forEach(track => track.stop()); 
+
+                document.removeEventListener("keydown", captureImage);
+                document.getElementById("camera-container").style.display = "none";
+
+                // ✅ Automatically submit form after capturing image
+                form.submit();
+            }
+        }
+    </script>
+
+</body>
+</html>

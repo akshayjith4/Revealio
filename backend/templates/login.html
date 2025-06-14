@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revealio - Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+    <style>
+        /* Loading Screen Styles */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .spinner {
+            border: 5px solid rgba(0, 0, 0, 0.1);
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 18px;
+            margin-top: 10px;
+            opacity: 0;
+            animation: fadeInText 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes fadeInText {
+            0% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+
+        /* Fade-in Effect for Main Content */
+        #main-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.8s ease-in;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        /* Form Styles */
+        input {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .btn {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="spinner"></div>
+        <p class="loading-text">Loading Revealio...</p>
+    </div>
+
+    <!-- Login Form -->
+    <div class="container" id="main-content">
+        <h1>Login to Revealio</h1>
+        <form method="POST" action="{{ url_for('login') }}">
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit" class="btn">Login</button>
+        </form>
+        <p>Don't have an account? <a href="{{ url_for('register') }}">Sign up</a></p>
+    </div>
+
+    <script>
+        // Hide loading screen and show main content smoothly
+        window.onload = function() {
+            setTimeout(() => {
+                document.getElementById("loading-screen").style.opacity = "0";
+                setTimeout(() => {
+                    document.getElementById("loading-screen").style.display = "none";
+                }, 500);
+            }, 1200);
+
+            let mainContent = document.getElementById("main-content");
+            setTimeout(() => {
+                mainContent.style.display = "block";
+                setTimeout(() => { mainContent.style.opacity = "1"; }, 50);
+            }, 1500);
+        };
+    </script>
+
+</body>
+</html>

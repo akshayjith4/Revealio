@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Revealio</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            color: #000;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            color: black;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        /* Dropdown Fix */
+        select {
+            background-color: white;
+            color: black;
+        }
+        select option {
+            background-color: white;
+            color: black;
+        }
+        /* Button Styling */
+        .btn {
+            background: linear-gradient(135deg, #ffcc00, #ff9900);
+            color: #000;
+            padding: 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            width: 100%;
+            border: none;
+        }
+        .btn:hover {
+            background: linear-gradient(135deg, #ff9900, #ff6600);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Sign Up for Revealio</h1>
+    <p>Create your account to start scanning ingredients</p>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+        <div class="input-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+
+        <div class="input-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+
+        <div class="input-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+
+        <div class="input-group">
+            <label for="allergies">Allergies</label>
+            <select id="allergies" name="allergies">
+                <option value="None" selected>None</option>
+                <option value="Dairy">Dairy</option>
+                <option value="Eggs">Eggs</option>
+                <option value="Fish">Fish</option>
+                <option value="Shellfish">Shellfish</option>
+                <option value="Peanuts">Peanuts</option>
+                <option value="Tree Nuts">Tree Nuts</option>
+                <option value="Soy">Soy</option>
+                <option value="Wheat">Wheat</option>
+                <option value="Sesame">Sesame</option>
+                <option value="Mustard">Mustard</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label for="health_conditions">Health Conditions</label>
+            <select id="health_conditions" name="health_conditions">
+                <option value="None" selected>None</option>
+                <option value="Lactose Intolerance">Lactose Intolerance</option>
+                <option value="Diabetes">Diabetes</option>
+                <option value="Hypertension">Hypertension</option>
+                <option value="High Cholesterol">High Cholesterol</option>
+                <option value="Celiac Disease">Celiac Disease</option>
+                <option value="Kidney Disease">Kidney Disease</option>
+                <option value="Gout">Gout</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label for="diet">Dietary Preference</label>
+            <select id="diet" name="diet">
+                <option value="None" selected>None</option>
+                <option value="Ketogenic">Ketogenic</option>
+                <option value="Low-Carb">Low-Carb</option>
+                <option value="Low-Fat">Low-Fat</option>
+                <option value="Paleo">Paleo</option>
+                <option value="Vegan">Vegan</option>
+                <option value="Vegetarian">Vegetarian</option>
+                <option value="Pescetarian">Pescetarian</option>
+                <option value="DASH">DASH</option>
+                <option value="Mayo Clinic">Mayo Clinic</option>
+                <option value="Mediterranean">Mediterranean</option>
+                <option value="Nordic">Nordic</option>
+                <option value="Atkins">Atkins</option>
+                <option value="Carnivore">Carnivore</option>
+                <option value="Gluten-Free">Gluten-Free</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn">Register</button>
+    </form>
+
+    <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+</div>
+
+</body>
+</html>

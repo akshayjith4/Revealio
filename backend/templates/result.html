@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Analysis Results</title>
+    <link rel="stylesheet" href="../static/styles.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>🍽 Food Analysis Results</h1>
+
+    <p><strong>👤 User:</strong> {{ username }}</p>
+
+    {% if extracted_text %}
+        <div class="section">
+            <h3>📜 Extracted Ingredients:</h3>
+            <p class="extracted-text">{{ extracted_text }}</p>
+        </div>
+    {% else %}
+        <p class="no-data">No extracted text available.</p>
+    {% endif %}
+
+    {% if analysis_results %}
+        <div class="section">
+            <h3>🔍 Analysis:</h3>
+            <ul class="ingredient-list">
+                {% for item in analysis_results %}
+                <li class="ingredient-card {% if item.status == 'Safe ✅' %}safe{% elif item.status == 'Not Safe ❌' %}unsafe{% else %}neutral{% endif %}">
+
+                        <strong>{{ item.ingredient }}</strong> - {{ item.status }}
+                        <p>{{ item.description }}</p>
+                        {% if item.reasons %}
+                            <ul class="reason-list">
+                                {% for reason in item.reasons %}
+                                    <li>{{ reason }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <p class="no-data">No analysis results available.</p>
+    {% endif %}
+
+    {% if message %}
+        <div class="section">
+            <h3>✅ Conclusion:</h3>
+            <p class="message">{{ message }}</p>
+        </div>
+    {% endif %}
+
+    <div class="button-container">
+        <a href="/logout" class="btn logout-btn">Logout</a>
+
+        {% if analysis_results and analysis_results | selectattr('status', 'equalto', 'Not Safe ❌') | list | length > 0 %}
+            <a href="/recommendation" class="btn alternative-btn">🔄 Alternative Recommendation</a>
+        {% endif %}
+    </div>
+</div>
+
+</body>
+</html>

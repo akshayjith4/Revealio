@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alternative Recommendations</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <h1>Alternative Recommendations</h1>
+
+    <p><strong>User:</strong> {{ username }}</p>
+
+    {% if unsafe_ingredients %}
+        <div class="section">
+            <h3>Unsafe Ingredients and Alternatives:</h3>
+            <ul class="ingredient-list">
+                {% for ingredient in unsafe_ingredients %}
+                    <li class="ingredient-card unsafe">
+                        <strong>{{ ingredient.capitalize() }}</strong>
+                        → Alternative: <span class="alternative">
+                            {{ recommendations.get(ingredient.lower(), "No alternative found") }}
+                        </span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <p>No unsafe ingredients found.</p>
+    {% endif %}
+
+    <div class="button-container">
+        <a href="/results" class="btn back-btn">Back to Results</a>
+    </div>
+</div>
+
+</body>
+</html>
