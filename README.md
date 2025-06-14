@@ -24,15 +24,9 @@ Revealio is an intelligent food label scanner powered by machine learning that h
 
 ---
 
-## 📸 Screenshots
-
-> _Add some UI screenshots here for visual appeal (upload to repo/images folder)._
-
----
 
 ## 📦 Installation
 
-```bash
 # Clone the repo
 git clone https://github.com/akshayjithps/Revealio.git
 cd Revealio
